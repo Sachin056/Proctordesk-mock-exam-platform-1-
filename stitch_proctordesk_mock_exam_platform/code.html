@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proctored-Style Assessment Experience | GLA University</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"IBM Plex Sans"', 'sans-serif'],
+            mono: ['"IBM Plex Mono"', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#F0F4F8',
+              100: '#D9E2EC',
+              200: '#BCCCDC',
+              700: '#1E3A5F',
+              800: '#102A43',
+              900: '#0F2537',
+              950: '#081622'
+            },
+            charcoal: '#1E293B',
+            subtle: '#64748B',
+            canvas: '#F8FAFC',
+            bordercol: '#CBD5E1',
+            success: '#15803D',
+            'success-bg': '#DCFCE7',
+            warning: '#B45309',
+            'warning-bg': '#FEF3C7',
+            critical: '#B91C1C',
+            'critical-bg': '#FEE2E2'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Institutional CBT styling essentials */
+    body {
+      background-color: #F8FAFC;
+      color: #1E293B;
+      font-family: 'IBM Plex Sans', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .cbt-border {
+      border: 1px solid #CBD5E1;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 3px;
+    }
+    /* Ensure clean print & modal locks */
+    .modal-backdrop {
+      background-color: rgba(15, 37, 55, 0.7);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased bg-slate-50 text-slate-800">
+
+  <!-- ========================================== -->
+  <!-- APPLICATION GLOBAL CONTAINER               -->
+  <!-- ========================================== -->
+  <div id="app" class="min-h-screen flex flex-col flex-1 relative">
+
+    <!-- TOP INSTITUTIONAL BAR (Consistent Branding) -->
+    <header class="bg-brand-900 text-white px-5 py-2.5 flex items-center justify-between border-b border-brand-950 z-20">
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 bg-white/10 rounded flex items-center justify-center font-bold text-sm tracking-wider border border-white/20">
+          GLA
+        </div>
+        <div>
+          <div class="text-xs font-semibold tracking-wider text-slate-200 uppercase">GLA UNIVERSITY · COMPUTER ENGINEERING & APPLICATIONS</div>
+          <div class="text-[11px] text-slate-400">Proctored-Style Assessment Experience (Academic Mini-Project)</div>
+        </div>
+      </div>
+      
+      <!-- Right Side Header Status (Dynamic based on route) -->
+      <div id="header-exam-status" class="hidden items-center space-x-4">
+        <!-- Proctoring status popover trigger -->
+        <button onclick="toggleProctoringPopover()" class="flex items-center space-x-1.5 px-2.5 py-1 bg-white/10 hover:bg-white/15 rounded text-xs transition border border-white/10 relative">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="font-medium text-slate-200">PROCTORING ACTIVE</span>
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+
+        <!-- Live Countdown Timer -->
+        <div class="flex items-center space-x-2 bg-brand-950/80 px-3 py-1 rounded border border-slate-700/60 font-mono">
+          <span class="text-[11px] text-slate-400 uppercase tracking-wider">REMAINING:</span>
+          <span id="header-timer" class="font-bold text-sm text-white">24:37</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Proctoring Details Dropdown / Popover -->
+    <div id="proctoring-popover" class="hidden absolute top-12 right-6 w-72 bg-white rounded shadow-xl border border-slate-300 z-50 p-4 text-xs">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-200 mb-3">
+        <div class="font-bold text-slate-800 uppercase tracking-wide">Proctoring Telemetry</div>
+        <span class="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded font-semibold text-[10px]">ACTIVE</span>
+      </div>
+      <div class="space-y-2 text-slate-600">
+        <div class="flex justify-between items-center">
+          <span>Fullscreen Enforcement:</span>
+          <span class="font-semibold text-emerald-700 flex items-center">✓ Locked</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span>Page Visibility Sensor:</span>
+          <span class="font-semibold text-emerald-700 flex items-center">✓ Foreground</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span>Window Blur Detection:</span>
+          <span class="font-semibold text-emerald-700 flex items-center">✓ Focused</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span>Local Storage Autosave:</span>
+          <span class="font-semibold text-emerald-700 flex items-center">✓ Synchronized</span>
+        </div>
+        <div class="pt-2 border-t border-slate-100 flex justify-between items-center text-slate-500">
+          <span>Tab Switches Detected:</span>
+          <span id="popover-violations-count" class="font-bold text-slate-800 font-mono">00</span>
+        </div>
+      </div>
+      <div class="mt-3 pt-2 text-[10px] text-slate-400 bg-slate-50 p-1.5 rounded text-center">
+        Client-side browser event telemetry active.
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ROUTE 01: /exam (EXAM LANDING)             -->
+    <!-- ========================================== -->
+    <div id="view-landing" class="view-panel flex-1 flex flex-col justify-center items-center p-6">
+      <div class="w-full max-w-2xl bg-white rounded border border-slate-300 shadow-sm p-8">
+        
+        <!-- Header badge -->
+        <div class="flex justify-between items-start mb-6 pb-4 border-b border-slate-200">
+          <div>
+            <div class="text-xs font-bold tracking-wider text-slate-500 uppercase">GLA University · Mini-Project Evaluation</div>
+            <h1 class="text-2xl font-bold text-brand-900 mt-1">PROCTORED-STYLE ASSESSMENT EXPERIENCE</h1>
+            <p class="text-sm text-slate-600 mt-0.5">High-Stakes Browser-Based Mock Examination</p>
+          </div>
+          <span class="px-2.5 py-1 bg-blue-50 text-brand-700 border border-blue-200 text-xs font-semibold rounded">
+            TERMINAL READY
+          </span>
+        </div>
+
+        <!-- Examination Particulars Grid -->
+        <div class="bg-slate-50 rounded border border-slate-200 p-4 mb-6">
+          <div class="grid grid-cols-2 gap-4 text-xs">
+            <div>
+              <span class="text-slate-500 block">Candidate Full Name:</span>
+              <span class="font-semibold text-slate-800 text-sm">Bhavishya Goyal</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block">University Roll Number:</span>
+              <span class="font-semibold text-slate-800 text-sm font-mono">241500XXXX</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block">Subject / Assessment:</span>
+              <span class="font-semibold text-slate-800">Computer Science Fundamentals (CS-302)</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block">Total Duration:</span>
+              <span class="font-semibold text-slate-800">30 Minutes (Strict Countdown)</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block">Questions:</span>
+              <span class="font-semibold text-slate-800">20 Multiple Choice Questions</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block">Persistence Strategy:</span>
+              <span class="font-semibold text-emerald-700">HTML5 LocalStorage (Autosaved)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Compatibility Quick Status -->
+        <div class="mb-8">
+          <div class="text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Pre-Flight Diagnostic Checklist:</div>
+          <div class="grid grid-cols-2 gap-2 text-xs text-slate-600">
+            <div class="flex items-center space-x-1.5 p-2 bg-slate-50 border border-slate-200 rounded">
+              <span class="text-emerald-600 font-bold">✓</span>
+              <span>Modern Browser Supported</span>
+            </div>
+            <div class="flex items-center space-x-1.5 p-2 bg-slate-50 border border-slate-200 rounded">
+              <span class="text-emerald-600 font-bold">✓</span>
+              <span>HTML5 Storage API Ready</span>
+            </div>
+            <div class="flex items-center space-x-1.5 p-2 bg-slate-50 border border-slate-200 rounded">
+              <span class="text-emerald-600 font-bold">✓</span>
+              <span>Fullscreen API Available</span>
+            </div>
+            <div class="flex items-center space-x-1.5 p-2 bg-slate-50 border border-slate-200 rounded">
+              <span class="text-emerald-600 font-bold">✓</span>
+              <span>Page Visibility Hook Enabled</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-between pt-4 border-t border-slate-200">
+          <button onclick="toggleModal('modal-info', true)" class="text-xs text-slate-600 hover:text-brand-800 font-medium underline">
+            View Examination Information
+          </button>
+          <button onclick="navigateTo('instructions')" class="px-6 py-2.5 bg-brand-900 hover:bg-brand-800 text-white font-semibold text-xs tracking-wider uppercase rounded shadow transition flex items-center space-x-2">
+            <span>Begin Examination</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ROUTE 02: /exam/instructions (INSTRUCTIONS)-->
+    <!-- ========================================== -->
+    <div id="view-instructions" class="view-panel hidden flex-1 flex flex-col justify-center items-center p-6">
+      <div class="w-full max-w-2xl bg-white rounded border border-slate-300 shadow-sm p-8">
+        
+        <div class="pb-4 border-b border-slate-200 mb-6">
+          <div class="text-xs font-bold tracking-wider text-slate-500 uppercase">Stage 01 of 02 · Mandatory Briefing</div>
+          <h2 class="text-xl font-bold text-brand-900 mt-1">EXAMINATION INSTRUCTIONS & CANDIDATE CODE</h2>
+          <p class="text-xs text-slate-500">Read each regulation carefully before proceeding to the system lock verification.</p>
+        </div>
+
+        <!-- Numbered Regulations -->
+        <ol class="space-y-3 text-xs text-slate-700 leading-relaxed mb-6 list-decimal pl-5">
+          <li class="pl-1"><span class="font-semibold text-slate-900">Strict Countdown Timer:</span> The examination operates under a strict synchronous 30-minute timer. When the timer reaches 00:00, the terminal auto-submits all recorded responses immediately.</li>
+          <li class="pl-1"><span class="font-semibold text-slate-900">Mandatory Fullscreen Mode:</span> The assessment will request and lock fullscreen. Leaving fullscreen triggers a high-priority compliance warning.</li>
+          <li class="pl-1"><span class="font-semibold text-slate-900">Tab Switching & Window Blur:</span> Switching browser tabs or defocussing the examination tab is automatically monitored via the HTML5 Page Visibility API and logged to your dossier.</li>
+          <li class="pl-1"><span class="font-semibold text-slate-900">Continuous Local Autosave:</span> Every selected alternative is instantly persisted to browser localStorage. Accidental reloads or interruptions will resume your exact progress without data loss.</li>
+          <li class="pl-1"><span class="font-semibold text-slate-900">Question Navigator:</span> You can flag questions for later review, unflag them, and jump directly to any question using the matrix panel.</li>
+          <li class="pl-1"><span class="font-semibold text-slate-900">Pre-Submission Review:</span> Before final submission, a comprehensive audit screen will highlight all unanswered and flagged questions.</li>
+        </ol>
+
+        <!-- Proctoring Notice Box -->
+        <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r mb-8">
+          <div class="flex items-start">
+            <svg class="w-5 h-5 text-amber-600 mr-2.5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <div>
+              <div class="text-xs font-bold text-amber-900 uppercase tracking-wide">Client-Side Simulated Proctoring Notice</div>
+              <p class="text-[11px] text-amber-800 mt-1">
+                This examination system leverages native browser telemetry to ensure high-stakes evaluation integrity. Tab visibility changes, window defocus, and fullscreen drops are intercepted in real-time. No external webcam or proprietary hardware is required for this mini-project simulation.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex items-center justify-between pt-4 border-t border-slate-200">
+          <button onclick="navigateTo('landing')" class="px-4 py-2 border border-slate-300 hover:bg-slate-100 text-slate-700 font-medium text-xs rounded transition">
+            Back
+          </button>
+          <button onclick="navigateTo('system-check')" class="px-6 py-2.5 bg-brand-900 hover:bg-brand-800 text-white font-semibold text-xs tracking-wider uppercase rounded shadow transition">
+            I Understand — Continue
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ROUTE 03: /exam/system-check (SYSTEM CHECK)-->
+    <!-- ========================================== -->
+    <div id="view-system-check" class="view-panel hidden flex-1 flex flex-col justify-center items-center p-6">
+      <div class="w-full max-w-xl bg-white rounded border border-slate-300 shadow-sm p-8">
+        
+        <div class="pb-4 border-b border-slate-200 mb-6">
+          <div class="text-xs font-bold tracking-wider text-slate-500 uppercase">Stage 02 of 02 · Pre-Exam System Check</div>
+          <h2 class="text-xl font-bold text-brand-900 mt-1">HARDWARE & BROWSER READINESS</h2>
+          <p class="text-xs text-slate-500">Confirming standard browser API endpoints prior to locked session dispatch.</p>
+        </div>
+
+        <!-- Readiness Checklist -->
+        <div class="divide-y divide-slate-200 border border-slate-200 rounded mb-6 text-xs">
+          <div class="p-3 flex justify-between items-center bg-white">
+            <div class="flex items-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="font-medium text-slate-800">Browser Compatibility (HTML5/DOM Level 3)</span>
+            </div>
+            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold text-[10px] rounded">READY</span>
+          </div>
+          <div class="p-3 flex justify-between items-center bg-white">
+            <div class="flex items-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="font-medium text-slate-800">Fullscreen API Interface Support</span>
+            </div>
+            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold text-[10px] rounded">READY</span>
+          </div>
+          <div class="p-3 flex justify-between items-center bg-white">
+            <div class="flex items-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="font-medium text-slate-800">Local Storage State Persistence</span>
+            </div>
+            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold text-[10px] rounded">READY</span>
+          </div>
+          <div class="p-3 flex justify-between items-center bg-white">
+            <div class="flex items-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="font-medium text-slate-800">Page Visibility API Sensor Hook</span>
+            </div>
+            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold text-[10px] rounded">READY</span>
+          </div>
+          <div class="p-3 flex justify-between items-center bg-white">
+            <div class="flex items-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="font-medium text-slate-800">Exam Testbed Rendering Container</span>
+            </div>
+            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold text-[10px] rounded">READY</span>
+          </div>
+        </div>
+
+        <!-- Fullscreen Requirement Banner -->
+        <div class="bg-blue-50 border border-blue-200 rounded p-4 mb-8 text-xs text-blue-900">
+          <div class="font-bold flex items-center mb-1">
+            <svg class="w-4 h-4 mr-1.5 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+            Fullscreen Mode Required
+          </div>
+          <p class="text-blue-800 text-[11px] leading-relaxed">
+            Clicking the launch button will enter fullscreen mode and initialize your secure 30-minute exam window. Ensure all messaging applications are minimized before beginning.
+          </p>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-between pt-4 border-t border-slate-200">
+          <button onclick="navigateTo('instructions')" class="px-4 py-2 border border-slate-300 hover:bg-slate-100 text-slate-700 font-medium text-xs rounded transition">
+            Back
+          </button>
+          <button onclick="startExamination()" class="px-6 py-2.5 bg-brand-900 hover:bg-brand-800 text-white font-bold text-xs tracking-wider uppercase rounded shadow transition flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            <span>Enter Fullscreen & Start</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ROUTE 04: /exam/test (MAIN EXAM INTERFACE) -->
+    <!-- ========================================== -->
+    <div id="view-test" class="view-panel hidden flex-1 flex flex-col h-[calc(100vh-50px)] overflow-hidden">
+      
+      <!-- SUB-HEADER METADATA STRIP -->
+      <div class="bg-white border-b border-slate-200 px-6 py-2 flex items-center justify-between text-xs text-slate-600 flex-shrink-0">
+        <div class="flex items-center space-x-4">
+          <span class="font-bold text-slate-900 uppercase">Computer Science Fundamentals (CS-302)</span>
+          <span class="text-slate-300">|</span>
+          <span>Candidate: <strong class="text-slate-800">Bhavishya Goyal</strong> (241500XXXX)</span>
+          <span class="text-slate-300">|</span>
+          <span class="text-slate-500">Marking: Single Correct Option (+1.0)</span>
+        </div>
+        
+        <!-- Live Autosave Status Indicator -->
+        <div class="flex items-center space-x-2">
+          <span id="autosave-spinner" class="hidden w-2 h-2 rounded-full bg-blue-500 animate-ping"></span>
+          <span id="autosave-label" class="font-medium text-slate-600 flex items-center space-x-1">
+            <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <span>Saved locally · Just now</span>
+          </span>
+          <!-- Proctoring Simulation Test Buttons for viva demonstration -->
+          <div class="ml-4 pl-4 border-l border-slate-200 flex items-center space-x-2 text-[10px]">
+            <span class="text-slate-400 font-semibold uppercase">Simulate:</span>
+            <button onclick="triggerTabSwitchWarning()" class="px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded border border-slate-300" title="Simulate tab switch / blur">
+              Tab Switch
+            </button>
+            <button onclick="triggerFullscreenExitWarning()" class="px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded border border-slate-300" title="Simulate fullscreen escape">
+              Fullscreen Exit
+            </button>
+            <button onclick="simulateTimerWarning()" class="px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded border border-slate-300" title="Trigger 5-minute warning banner">
+              Time Warning
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIMER WARNING BANNER (DYNAMIC OVERLAY BANNER) -->
+      <div id="exam-time-banner" class="hidden bg-amber-500 text-white px-4 py-1.5 text-xs font-semibold flex items-center justify-between shadow-inner">
+        <div class="flex items-center space-x-2">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+          <span id="exam-time-banner-text">ATTENTION: Less than 5 minutes remaining in this examination!</span>
+        </div>
+        <button onclick="document.getElementById('exam-time-banner').classList.add('hidden')" class="text-white hover:text-amber-100 text-xs underline">
+          Acknowledge
+        </button>
+      </div>
+
+      <!-- THREE-REGION MAIN WORKSPACE -->
+      <div class="flex-1 flex overflow-hidden">
+        
+        <!-- LEFT / CENTER: QUESTION WORKSPACE -->
+        <main class="flex-1 flex flex-col bg-white overflow-y-auto custom-scroll p-8">
+          <div class="max-w-3xl w-full mx-auto flex-1 flex flex-col">
+            
+            <!-- Question Header Controls -->
+            <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-6">
+              <div class="flex items-center space-x-3">
+                <span id="current-q-index-pill" class="text-xs font-bold bg-brand-900 text-white px-2.5 py-1 rounded">
+                  QUESTION 07 OF 20
+                </span>
+                <span id="current-q-status-badge" class="text-xs px-2 py-0.5 rounded font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                  Unanswered
+                </span>
+              </div>
+              
+              <!-- Flag for Review Toggle Button -->
+              <button id="flag-btn" onclick="toggleCurrentFlag()" class="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded border border-slate-300 hover:bg-slate-50 transition text-slate-700">
+                <svg id="flag-icon" class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
+                <span id="flag-label">Flag for Review</span>
+              </button>
+            </div>
+
+            <!-- Question Prompt Body -->
+            <div class="mb-8">
+              <h3 id="question-text" class="text-lg font-medium text-slate-900 leading-snug">
+                Which data structure follows the Last-In-First-Out (LIFO) principle where elements are inserted and deleted from the same terminal end?
+              </h3>
+            </div>
+
+            <!-- Answer Options List (High-hit targets) -->
+            <div class="space-y-3 mb-8" id="answer-options-container">
+              <!-- Rendered dynamically by renderQuestion() -->
+            </div>
+
+            <!-- Bottom Question Controls -->
+            <div class="mt-auto pt-6 border-t border-slate-200 flex items-center justify-between">
+              <div>
+                <button onclick="clearCurrentResponse()" class="px-3.5 py-2 text-xs font-medium text-slate-600 hover:text-critical border border-slate-300 hover:border-critical/30 rounded transition">
+                  Clear Response
+                </button>
+              </div>
+              <div class="flex items-center space-x-3">
+                <button id="btn-prev" onclick="goToPreviousQuestion()" class="px-5 py-2 border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold text-xs rounded transition flex items-center space-x-1.5">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                  <span>Previous</span>
+                </button>
+                <button id="btn-next" onclick="saveAndNextQuestion()" class="px-6 py-2 bg-brand-900 hover:bg-brand-800 text-white font-semibold text-xs rounded shadow transition flex items-center space-x-1.5">
+                  <span>Save & Next</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </main>
+
+        <!-- RIGHT: QUESTION NAVIGATOR SIDEBAR -->
+        <aside class="w-80 bg-slate-50 border-l border-slate-200 flex flex-col flex-shrink-0">
+          
+          <div class="p-4 border-b border-slate-200 bg-white">
+            <div class="flex justify-between items-center mb-1">
+              <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Question Navigator</h4>
+              <span class="text-[11px] font-mono font-semibold text-slate-500">20 Questions</span>
+            </div>
+            <div class="text-[11px] text-slate-500">Click any number to navigate immediately.</div>
+          </div>
+
+          <!-- Question Grid (4x5) -->
+          <div class="p-4 flex-1 overflow-y-auto custom-scroll">
+            <div id="navigator-grid" class="grid grid-cols-5 gap-2.5">
+              <!-- Injected by script: 20 buttons -->
+            </div>
+          </div>
+
+          <!-- Navigator State Legend -->
+          <div class="p-4 bg-white border-t border-slate-200 text-xs">
+            <div class="font-semibold text-slate-700 uppercase tracking-wider text-[10px] mb-2.5">Status Legend:</div>
+            <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-600 mb-4">
+              <div class="flex items-center space-x-2">
+                <span class="w-3.5 h-3.5 rounded bg-emerald-600 border border-emerald-700"></span>
+                <span>Answered</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="w-3.5 h-3.5 rounded bg-white border border-slate-300"></span>
+                <span>Unanswered</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="w-3.5 h-3.5 rounded bg-amber-500 border border-amber-600"></span>
+                <span>Flagged</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="w-3.5 h-3.5 rounded bg-white border-2 border-brand-900"></span>
+                <span>Current</span>
+              </div>
+            </div>
+
+            <!-- Quantitative Counters Strip -->
+            <div class="bg-slate-50 rounded p-2.5 border border-slate-200 mb-4 flex justify-between text-center font-mono text-xs">
+              <div>
+                <span class="text-[10px] text-slate-400 block font-sans">ANSWERED</span>
+                <span id="nav-count-answered" class="font-bold text-emerald-700 text-sm">6</span>
+              </div>
+              <div class="border-l border-slate-200 pl-3">
+                <span class="text-[10px] text-slate-400 block font-sans">UNANSWERED</span>
+                <span id="nav-count-unanswered" class="font-bold text-slate-700 text-sm">12</span>
+              </div>
+              <div class="border-l border-slate-200 pl-3">
+                <span class="text-[10px] text-slate-400 block font-sans">FLAGGED</span>
+                <span id="nav-count-flagged" class="font-bold text-amber-700 text-sm">2</span>
+              </div>
+            </div>
+
+            <!-- Review & Submit Navigation Button -->
+            <button onclick="navigateTo('review')" class="w-full py-2.5 bg-brand-900 hover:bg-brand-800 text-white font-bold text-xs uppercase tracking-wider rounded shadow transition flex items-center justify-center space-x-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+              <span>Review & Submit</span>
+            </button>
+          </div>
+
+        </aside>
+
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ROUTE 08: /exam/review (REVIEW & SUBMIT)   -->
+    <!-- ========================================== -->
+    <div id="view-review" class="view-panel hidden flex-1 flex flex-col justify-start items-center p-8 overflow-y-auto custom-scroll">
+      <div class="w-full max-w-3xl bg-white rounded border border-slate-300 shadow-sm p-8">
+        
+        <div class="pb-4 border-b border-slate-200 mb-6 flex justify-between items-start">
+          <div>
+            <div class="text-xs font-bold tracking-wider text-slate-500 uppercase">Pre-Submission Audit</div>
+            <h2 class="text-xl font-bold text-brand-900 mt-1">REVIEW YOUR EXAMINATION</h2>
+            <p class="text-xs text-slate-500">Review unanswered and flagged questions before committing your final evaluation submission.</p>
+          </div>
+          <button onclick="navigateTo('test')" class="px-3 py-1.5 border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium text-xs rounded transition">
+            ← Return to Test
+          </button>
+        </div>
+
+        <!-- Clean Summary Metric Strip -->
+        <div class="grid grid-cols-4 gap-3 bg-slate-50 p-4 rounded border border-slate-200 mb-8 text-center">
+          <div>
+            <div class="text-[11px] text-slate-500 font-semibold uppercase">Total Questions</div>
+            <div class="text-2xl font-bold text-slate-800 font-mono mt-0.5">20</div>
+          </div>
+          <div class="border-l border-slate-200">
+            <div class="text-[11px] text-emerald-700 font-semibold uppercase">Answered</div>
+            <div id="review-stat-answered" class="text-2xl font-bold text-emerald-700 font-mono mt-0.5">16</div>
+          </div>
+          <div class="border-l border-slate-200">
+            <div class="text-[11px] text-slate-600 font-semibold uppercase">Unanswered</div>
+            <div id="review-stat-unanswered" class="text-2xl font-bold text-slate-700 font-mono mt-0.5">4</div>
+          </div>
+          <div class="border-l border-slate-200">
+            <div class="text-[11px] text-amber-700 font-semibold uppercase">Flagged for Review</div>
+            <div id="review-stat-flagged" class="text-2xl font-bold text-amber-600 font-mono mt-0.5">3</div>
+          </div>
+        </div>
+
+        <!-- AUDIT SECTION 1: UNANSWERED QUESTIONS -->
+        <div class="mb-8">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center">
+              <span class="w-2.5 h-2.5 rounded-full bg-slate-400 mr-2"></span>
+              Unanswered Questions (<span id="unanswered-count-badge">4</span>)
+            </h3>
+            <span class="text-[11px] text-slate-400">Questions without any recorded response</span>
+          </div>
+
+          <div id="unanswered-list-container" class="divide-y divide-slate-200 border border-slate-200 rounded text-xs">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- AUDIT SECTION 2: FLAGGED FOR REVIEW -->
+        <div class="mb-8">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xs font-bold text-amber-800 uppercase tracking-wider flex items-center">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500 mr-2"></span>
+              Flagged for Review (<span id="flagged-count-badge">3</span>)
+            </h3>
+            <span class="text-[11px] text-slate-400">Marked for second consideration</span>
+          </div>
+
+          <div id="flagged-list-container" class="divide-y divide-slate-200 border border-slate-200 rounded text-xs">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Bottom Actions -->
+        <div class="flex items-center justify-between pt-6 border-t border-slate-200">
+          <button onclick="navigateTo('test')" class="px-5 py-2.5 border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold text-xs rounded transition flex items-center space-x-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            <span>Return to Examination</span>
+          </button>
+          <button onclick="openSubmitConfirmationModal()" class="px-6 py-2.5 bg-critical hover:bg-red-800 text-white font-bold text-xs uppercase tracking-wider rounded shadow transition flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <span>Submit Examination</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ROUTE 10: /exam/submitting (SUBMITTING)    -->
+    <!-- ========================================== -->
+    <div id="view-submitting" class="view-panel hidden flex-1 flex flex-col justify-center items-center p-6">
+      <div class="w-full max-w-md bg-white rounded border border-slate-300 shadow-sm p-8 text-center">
+        <div class="w-12 h-12 border-4 border-brand-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <h2 class="text-lg font-bold text-brand-900 mb-1">SUBMITTING EXAMINATION</h2>
+        <p class="text-xs text-slate-600 mb-4">Your responses are being finalized and indexed into the local examination record...</p>
+        <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+          <div class="bg-brand-900 h-1.5 rounded-full animate-pulse" style="width: 80%"></div>
+        </div>
+        <span class="text-[10px] text-slate-400 mt-3 block font-mono">ENCRYPTING LOCAL RECORD STORE · PLEASE WAIT</span>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ROUTE 11: /exam/submitted (COMPLETION)     -->
+    <!-- ========================================== -->
+    <div id="view-submitted" class="view-panel hidden flex-1 flex flex-col justify-center items-center p-6">
+      <div class="w-full max-w-lg bg-white rounded border border-slate-300 shadow-sm p-8 text-center">
+        
+        <div class="w-14 h-14 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-700 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+        </div>
+
+        <h2 class="text-xl font-bold text-brand-900 mb-1">EXAMINATION SUBMITTED</h2>
+        <p class="text-xs text-slate-600 mb-6">Your examination responses have been successfully locked and recorded.</p>
+
+        <!-- Official Submission Receipt Details -->
+        <div class="bg-slate-50 border border-slate-200 rounded p-4 text-xs text-left space-y-2 mb-6">
+          <div class="flex justify-between">
+            <span class="text-slate-500">Submission Status:</span>
+            <span class="font-bold text-emerald-700 uppercase">Confirmed / Locked</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Candidate Name:</span>
+            <span class="font-medium text-slate-800">Bhavishya Goyal</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">University Roll Number:</span>
+            <span class="font-mono text-slate-800">241500XXXX</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Course / Code:</span>
+            <span class="font-medium text-slate-800">CS Fundamentals (CS-302)</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Responses Stored Locally:</span>
+            <span id="final-submitted-count" class="font-bold text-slate-800">18 / 20 Questions</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Submission Timestamp:</span>
+            <span id="final-submitted-time" class="font-mono text-slate-800">10:42 AM IST</span>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-500 mb-6">Thank you for completing the assessment. You may now close your browser tab or return to the main portal.</p>
+
+        <button onclick="resetAndReturnHome()" class="px-6 py-2.5 border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold text-xs tracking-wider uppercase rounded transition">
+          Return to Portal Home
+        </button>
+
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- INTERACTIVE MODALS & SYSTEM WARNING OVERLAYS-->
+    <!-- ========================================== -->
+
+    <!-- MODAL 01: TAB SWITCH WARNING (SCREEN 05) -->
+    <div id="modal-tab-warning" class="hidden fixed inset-0 modal-backdrop flex items-center justify-center p-4 z-50">
+      <div class="bg-white rounded max-w-md w-full p-6 border-t-4 border-critical shadow-2xl">
+        <div class="flex items-start space-x-3 mb-4">
+          <div class="w-10 h-10 rounded-full bg-red-100 text-critical flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900 uppercase">Attention Required</h3>
+            <p class="text-xs font-semibold text-critical">You have left the examination window.</p>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-600 leading-relaxed mb-4">
+          Switching tabs, minimizing the browser, or moving away from the active examination window has been detected via the Page Visibility API.
+        </p>
+
+        <div class="bg-slate-50 border border-slate-200 rounded p-3 text-xs mb-5 space-y-1">
+          <div class="flex justify-between">
+            <span class="text-slate-500">Proctoring Event:</span>
+            <span class="font-semibold text-slate-800">Tab Visibility Defocus</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Recorded Incident Count:</span>
+            <span id="tab-warning-count" class="font-mono font-bold text-critical">01</span>
+          </div>
+        </div>
+
+        <div class="text-right">
+          <button onclick="dismissTabWarning()" class="w-full py-2.5 bg-brand-900 hover:bg-brand-800 text-white font-bold text-xs uppercase tracking-wider rounded shadow transition">
+            Return to Examination
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 02: FULLSCREEN EXIT WARNING (SCREEN 06) -->
+    <div id="modal-fullscreen-warning" class="hidden fixed inset-0 modal-backdrop flex items-center justify-center p-4 z-50">
+      <div class="bg-white rounded max-w-md w-full p-6 border-t-4 border-amber-500 shadow-2xl">
+        <div class="flex items-start space-x-3 mb-4">
+          <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900 uppercase">Fullscreen Mode Required</h3>
+            <p class="text-xs text-slate-600">The examination must remain in fullscreen mode.</p>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-600 leading-relaxed mb-6">
+          The examination interface detected a window resize or exit from fullscreen container mode. Please restore fullscreen mode to continue interacting with questions.
+        </p>
+
+        <button onclick="reEnterFullscreen()" class="w-full py-2.5 bg-brand-900 hover:bg-brand-800 text-white font-bold text-xs uppercase tracking-wider rounded shadow transition flex items-center justify-center space-x-2">
+          <span>Re-enter Fullscreen</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL 03: FINAL SUBMISSION CONFIRMATION (SCREEN 09) -->
+    <div id="modal-submit-confirmation" class="hidden fixed inset-0 modal-backdrop flex items-center justify-center p-4 z-50">
+      <div class="bg-white rounded max-w-md w-full p-6 border border-slate-300 shadow-2xl">
+        <h3 class="text-base font-bold text-brand-900 uppercase pb-2 border-b border-slate-200 mb-3">
+          Submit Examination?
+        </h3>
+
+        <div id="submit-confirm-message" class="text-xs text-slate-700 leading-relaxed mb-4">
+          You have <strong>4 unanswered questions</strong> and <strong>3 questions flagged for review</strong>.
+        </div>
+
+        <p class="text-xs text-critical font-medium mb-6">
+          Once submitted, your responses cannot be modified and your examination session will be permanently closed.
+        </p>
+
+        <div class="flex items-center justify-end space-x-3">
+          <button onclick="toggleModal('modal-submit-confirmation', false)" class="px-4 py-2 border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold text-xs rounded transition">
+            Cancel
+          </button>
+          <button onclick="confirmFinalSubmit()" class="px-5 py-2 bg-critical hover:bg-red-800 text-white font-bold text-xs uppercase tracking-wider rounded shadow transition">
+            Confirm Submit
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 04: TIME EXPIRED AUTOMATIC SUBMISSION -->
+    <div id="modal-time-expired" class="hidden fixed inset-0 modal-backdrop flex items-center justify-center p-4 z-50">
+      <div class="bg-white rounded max-w-md w-full p-6 text-center border-t-4 border-critical shadow-2xl">
+        <div class="w-12 h-12 bg-red-100 text-critical rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <h3 class="text-base font-bold text-slate-900 uppercase mb-1">Time Expired</h3>
+        <p class="text-xs text-slate-600 mb-4">The allotted 30-minute examination duration has elapsed. Your recorded responses are being submitted automatically.</p>
+        <div class="text-xs font-semibold text-brand-900 animate-pulse">Submitting responses...</div>
+      </div>
+    </div>
+
+    <!-- MODAL 05: EXAMINATION INFO PANEL -->
+    <div id="modal-info" class="hidden fixed inset-0 modal-backdrop flex items-center justify-center p-4 z-50">
+      <div class="bg-white rounded max-w-lg w-full p-6 border border-slate-300 shadow-2xl">
+        <div class="flex justify-between items-center pb-3 border-b border-slate-200 mb-4">
+          <h3 class="text-sm font-bold text-brand-900 uppercase">Assessment Specification & Architecture</h3>
+          <button onclick="toggleModal('modal-info', false)" class="text-slate-400 hover:text-slate-600">✕</button>
+        </div>
+        <div class="text-xs text-slate-600 space-y-3 leading-relaxed mb-6">
+          <p><strong class="text-slate-800">Project Type:</strong> B.Tech University Mini-Project (Browser-Based CBT Examination Simulator).</p>
+          <p><strong class="text-slate-800">Target Frameworks:</strong> HTML5 Web Storage (localStorage state mirroring), Page Visibility API, Fullscreen API, DOM event hooks.</p>
+          <p><strong class="text-slate-800">Scope Discipline:</strong> Strictly client-side proctoring simulation. Webcam feeds, facial detection, and server-side tracking are intentionally categorized as future enhancements in the project synopsis.</p>
+        </div>
+        <div class="text-right">
+          <button onclick="toggleModal('modal-info', false)" class="px-4 py-2 bg-brand-900 text-white font-semibold text-xs rounded">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========================================== -->
+  <!-- CLIENT APPLICATION ENGINE & STATE STORE   -->
+  <!-- ========================================== -->
+  <script>
+    // 20 Realistic Computer Science Multiple Choice Questions
+    const EXAM_QUESTIONS = [
+      {
+        id: 1,
+        text: "Which data structure follows the Last-In-First-Out (LIFO) principle where insertion and deletion occur at the same terminal end?",
+        options: [
+          { key: "A", text: "Queue (FIFO sequential buffer)" },
+          { key: "B", text: "Stack (Push/Pop operations at top of stack)" },
+          { key: "C", text: "Linked List (Dynamic pointer chained nodes)" },
+          { key: "D", text: "Binary Search Tree (Hierarchical partitioned key structure)" }
+        ]
+      },
+      {
+        id: 2,
+        text: "What is the average-case time complexity of searching an element in a balanced Binary Search Tree (BST)?",
+        options: [
+          { key: "A", text: "O(1) constant time" },
+          { key: "B", text: "O(n) linear complexity" },
+          { key: "C", text: "O(log n) logarithmic time" },
+          { key: "D", text: "O(n log n) linearithmic complexity" }
+        ]
+      },
+      {
+        id: 3,
+        text: "In the OSI Model, which layer is strictly responsible for end-to-end reliability, flow control, and segment sequencing?",
+        options: [
+          { key: "A", text: "Network Layer" },
+          { key: "B", text: "Data Link Layer" },
+          { key: "C", text: "Transport Layer" },
+          { key: "D", text: "Session Layer" }
+        ]
+      },
+      {
+        id: 4,
+        text: "Which database Normal Form specifically eliminates partial functional dependency on a composite primary key?",
+        options: [
+          { key: "A", text: "First Normal Form (1NF)" },
+          { key: "B", text: "Second Normal Form (2NF)" },
+          { key: "C", text: "Third Normal Form (3NF)" },
+          { key: "D", text: "Boyce-Codd Normal Form (BCNF)" }
+        ]
+      },
+      {
+        id: 5,
+        text: "Which CPU scheduling algorithm is prone to indefinite starvation of low-priority processes?",
+        options: [
+          { key: "A", text: "Round Robin (RR) with fixed time quantum" },
+          { key: "B", text: "First-Come First-Served (FCFS)" },
+          { key: "C", text: "Shortest Job First (SJF) non-preemptive" },
+          { key: "D", text: "Priority Scheduling (without aging mechanism)" }
+        ]
+      },
+      {
+        id: 6,
+        text: "Which protocol operates over TCP port 443 to encrypt application payload using TLS/SSL cryptographic tunnels?",
+        options: [
+          { key: "A", text: "SSH (Secure Shell)" },
+          { key: "B", text: "HTTPS (Hypertext Transfer Protocol Secure)" },
+          { key: "C", text: "SFTP (Secure File Transfer)" },
+          { key: "D", text: "SMTPS (Simple Mail Transfer Secure)" }
+        ]
+      },
+      {
+        id: 7,
+        text: "In relational algebra, which fundamental operation produces a Cartesian product followed by a selection condition?",
+        options: [
+          { key: "A", text: "Projection (π)" },
+          { key: "B", text: "Theta Join (⨝θ)" },
+          { key: "C", text: "Set Difference (-)" },
+          { key: "D", text: "Union (∪)" }
+        ]
+      },
+      {
+        id: 8,
+        text: "What design pattern guarantees that a class has only one single instantiated object instance and provides a global access point?",
+        options: [
+          { key: "A", text: "Factory Method Pattern" },
+          { key: "B", text: "Observer Pattern" },
+          { key: "C", text: "Singleton Pattern" },
+          { key: "D", text: "Adapter Pattern" }
+        ]
+      },
+      {
+        id: 9,
+        text: "Which asymptotic notation provides a formal mathematical tight bound (both upper and lower bound) on algorithm growth?",
+        options: [
+          { key: "A", text: "Big O notation (O)" },
+          { key: "B", text: "Big Omega notation (Ω)" },
+          { key: "C", text: "Big Theta notation (Θ)" },
+          { key: "D", text: "Little o notation (o)" }
+        ]
+      },
+      {
+        id: 10,
+        text: "In operating systems, which condition is NOT one of the four essential Coffman conditions required for a system deadlock to occur?",
+        options: [
+          { key: "A", text: "Mutual Exclusion" },
+          { key: "B", text: "Hold and Wait" },
+          { key: "C", text: "Preemption Allowed" },
+          { key: "D", text: "Circular Wait" }
+        ]
+      },
+      {
+        id: 11,
+        text: "Which sorting algorithm is in-place and has a guaranteed worst-case time complexity of O(n log n)?",
+        options: [
+          { key: "A", text: "Merge Sort" },
+          { key: "B", text: "Quick Sort" },
+          { key: "C", text: "Heap Sort" },
+          { key: "D", text: "Bubble Sort" }
+        ]
+      },
+      {
+        id: 12,
+        text: "What is the primary function of the Address Resolution Protocol (ARP) in IPv4 local computer networking?",
+        options: [
+          { key: "A", text: "Map known IP address to physical MAC hardware address" },
+          { key: "B", text: "Map hostname domain to public IP address" },
+          { key: "C", text: "Assign dynamic IP leases to local host interfaces" },
+          { key: "D", text: "Route packets across autonomous system boundaries" }
+        ]
+      },
+      {
+        id: 13,
+        text: "In C++ and Java object-oriented design, what mechanism allows runtime polymorphism (dynamic method dispatch)?",
+        options: [
+          { key: "A", text: "Virtual functions / method overriding" },
+          { key: "B", text: "Method overloading (compile-time)" },
+          { key: "C", text: "Template specialization" },
+          { key: "D", text: "Access modifier encapsulation" }
+        ]
+      },
+      {
+        id: 14,
+        text: "Which graph traversal strategy utilizes a First-In-First-Out (FIFO) queue and is optimal for unweighted shortest paths?",
+        options: [
+          { key: "A", text: "Depth-First Search (DFS)" },
+          { key: "B", text: "Breadth-First Search (BFS)" },
+          { key: "C", text: "Topological Sort" },
+          { key: "D", text: "A* Heuristic Search" }
+        ]
+      },
+      {
+        id: 15,
+        text: "In relational database ACID properties, which property ensures that transactions execute without interference from concurrent transactions?",
+        options: [
+          { key: "A", text: "Atomicity" },
+          { key: "B", text: "Consistency" },
+          { key: "C", text: "Isolation" },
+          { key: "D", text: "Durability" }
+        ]
+      },
+      {
+        id: 16,
+        text: "Which page replacement algorithm replaces the memory page that will not be referenced for the longest period in the future?",
+        options: [
+          { key: "A", text: "Least Recently Used (LRU)" },
+          { key: "B", text: "First-In First-Out (FIFO)" },
+          { key: "C", text: "Optimal Page Replacement (OPT/Belady's)" },
+          { key: "D", text: "Second Chance Clock" }
+        ]
+      },
+      {
+        id: 17,
+        text: "In compiler construction, which analysis phase verifies grammar rules and constructs an Abstract Syntax Tree (AST)?",
+        options: [
+          { key: "A", text: "Lexical Analysis (Scanner)" },
+          { key: "B", text: "Syntax Analysis (Parser)" },
+          { key: "C", text: "Semantic Analysis" },
+          { key: "D", text: "Intermediate Code Generation" }
+        ]
+      },
+      {
+        id: 18,
+        text: "Which IP addressing class reserved the default prefix range 224.0.0.0 through 239.255.255.255 for multicast transmission?",
+        options: [
+          { key: "A", text: "Class B" },
+          { key: "B", text: "Class C" },
+          { key: "C", text: "Class D" },
+          { key: "D", text: "Class E" }
+        ]
+      },
+      {
+        id: 19,
+        text: "What algorithmic paradigm does Dijkstra's Single-Source Shortest Path algorithm adhere to?",
+        options: [
+          { key: "A", text: "Dynamic Programming" },
+          { key: "B", text: "Greedy Strategy" },
+          { key: "C", text: "Divide and Conquer" },
+          { key: "D", text: "Backtracking Branch and Bound" }
+        ]
+      },
+      {
+        id: 20,
+        text: "In computer system memory hierarchy, which cache mapping scheme maps each main memory block to exactly one specific cache line?",
+        options: [
+          { key: "A", text: "Direct Mapping" },
+          { key: "B", text: "Fully Associative Mapping" },
+          { key: "C", text: "k-Way Set Associative Mapping" },
+          { key: "D", text: "Segmented Virtual Paging" }
+        ]
+      }
+    ];
+
+    // APPLICATION STATE STORE
+    let appState = {
+      currentRoute: 'landing',
+      currentQuestionIndex: 6, // 0-based index: default question 7 as requested
+      answers: {
+        0: 'B',
+        1: 'C',
+        2: 'C',
+        4: 'D',
+        5: 'B',
+        6: 'B' // Q7 pre-answered to match realistic screenshot state
+      },
+      flags: {
+        2: true, // Q3 flagged
+        6: true  // Q7 flagged
+      },
+      timeRemainingSeconds: 24 * 60 + 37, // 24:37
+      timerInterval: null,
+      tabSwitchCount: 1,
+      examSubmitted: false
+    };
+
+    // LOCAL STORAGE SYNC
+    const STORAGE_KEY = 'GLA_CBT_ASSESSMENT_STATE_V1';
+
+    function saveStateToLocalStorage() {
+      try {
+        const payload = {
+          answers: appState.answers,
+          flags: appState.flags,
+          currentQuestionIndex: appState.currentQuestionIndex,
+          timeRemainingSeconds: appState.timeRemainingSeconds,
+          tabSwitchCount: appState.tabSwitchCount
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        pulseAutosave();
+      } catch (e) {
+        console.warn('LocalStorage unavailable in environment, persisting in-memory state.');
+      }
+    }
+
+    function loadStateFromLocalStorage() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.answers) appState.answers = parsed.answers;
+          if (parsed.flags) appState.flags = parsed.flags;
+          if (parsed.currentQuestionIndex !== undefined) appState.currentQuestionIndex = parsed.currentQuestionIndex;
+          if (parsed.timeRemainingSeconds !== undefined) appState.timeRemainingSeconds = parsed.timeRemainingSeconds;
+          if (parsed.tabSwitchCount !== undefined) appState.tabSwitchCount = parsed.tabSwitchCount;
+        }
+      } catch (e) {}
+    }
+
+    function pulseAutosave() {
+      const spinner = document.getElementById('autosave-spinner');
+      const label = document.getElementById('autosave-label');
+      if (spinner && label) {
+        spinner.classList.remove('hidden');
+        label.innerHTML = '<span class="text-blue-600 font-medium">Saving locally...</span>';
+        setTimeout(() => {
+          spinner.classList.add('hidden');
+          const now = new Date();
+          const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          label.innerHTML = `<svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Saved locally · ${timeStr}</span>`;
+        }, 300);
+      }
+    }
+
+    // ROUTING / NAVIGATION CONTROLLER
+    function navigateTo(routeName) {
+      appState.currentRoute = routeName;
+      
+      // Hide all view panels
+      document.querySelectorAll('.view-panel').forEach(panel => {
+        panel.classList.add('hidden');
+      });
+
+      // Header status indicator visibility
+      const headerStatus = document.getElementById('header-exam-status');
+      if (routeName === 'test') {
+        headerStatus.classList.remove('hidden');
+        headerStatus.classList.add('flex');
+      } else {
+        headerStatus.classList.add('hidden');
+        headerStatus.classList.remove('flex');
+      }
+
+      // Show targeted view
+      const targetView = document.getElementById(`view-${routeName}`);
+      if (targetView) {
+        targetView.classList.remove('hidden');
+      }
+
+      // Route-specific triggers
+      if (routeName === 'test') {
+        renderQuestion(appState.currentQuestionIndex);
+        renderNavigatorGrid();
+        updateCounts();
+        startTimer();
+      } else if (routeName === 'review') {
+        renderReviewAuditScreen();
+      }
+
+      // Close open popovers
+      document.getElementById('proctoring-popover').classList.add('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    // EXAMINATION WORKFLOW CONTROLLERS
+    function startExamination() {
+      // Attempt browser fullscreen if supported
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+      navigateTo('test');
+    }
+
+    function renderQuestion(index) {
+      appState.currentQuestionIndex = index;
+      const q = EXAM_QUESTIONS[index];
+      
+      // Update Top Index Pill
+      const pill = document.getElementById('current-q-index-pill');
+      pill.textContent = `QUESTION ${(index + 1).toString().padStart(2, '0')} OF ${EXAM_QUESTIONS.length}`;
+
+      // Update Status Badge
+      const statusBadge = document.getElementById('current-q-status-badge');
+      const isAnswered = appState.answers.hasOwnProperty(index);
+      const isFlagged = appState.flags[index] === true;
+
+      if (isAnswered && isFlagged) {
+        statusBadge.textContent = 'Answered & Flagged';
+        statusBadge.className = 'text-xs px-2 py-0.5 rounded font-medium bg-amber-100 text-amber-800 border border-amber-300';
+      } else if (isAnswered) {
+        statusBadge.textContent = 'Answered';
+        statusBadge.className = 'text-xs px-2 py-0.5 rounded font-medium bg-emerald-100 text-emerald-800 border border-emerald-300';
+      } else if (isFlagged) {
+        statusBadge.textContent = 'Flagged (Unanswered)';
+        statusBadge.className = 'text-xs px-2 py-0.5 rounded font-medium bg-amber-50 text-amber-700 border border-amber-200';
+      } else {
+        statusBadge.textContent = 'Unanswered';
+        statusBadge.className = 'text-xs px-2 py-0.5 rounded font-medium bg-slate-100 text-slate-600 border border-slate-200';
+      }
+
+      // Update Flag Button state
+      const flagBtn = document.getElementById('flag-btn');
+      const flagIcon = document.getElementById('flag-icon');
+      const flagLabel = document.getElementById('flag-label');
+
+      if (isFlagged) {
+        flagBtn.className = 'flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded bg-amber-100 text-amber-900 border border-amber-400';
+        flagIcon.className = 'w-4 h-4 text-amber-700 fill-current';
+        flagLabel.textContent = 'Unflag Question';
+      } else {
+        flagBtn.className = 'flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded border border-slate-300 hover:bg-slate-50 transition text-slate-700';
+        flagIcon.className = 'w-4 h-4 text-slate-400';
+        flagLabel.textContent = 'Flag for Review';
+      }
+
+      // Question Text
+      document.getElementById('question-text').textContent = q.text;
+
+      // Render Options
+      const container = document.getElementById('answer-options-container');
+      container.innerHTML = '';
+
+      const currentSelectedKey = appState.answers[index];
+
+      q.options.forEach(opt => {
+        const isSelected = (currentSelectedKey === opt.key);
+        const optRow = document.createElement('div');
+        optRow.className = `p-3.5 border rounded cursor-pointer transition flex items-center justify-between ${
+          isSelected 
+            ? 'bg-blue-50/70 border-brand-900 shadow-sm' 
+            : 'bg-white border-slate-300 hover:bg-slate-50 hover:border-slate-400'
+        }`;
+        optRow.onclick = () => selectOption(index, opt.key);
+
+        optRow.innerHTML = `
+          <div class="flex items-center space-x-3.5">
+            <div class="w-4 h-4 rounded-full border flex items-center justify-center ${
+              isSelected ? 'border-brand-900 bg-brand-900' : 'border-slate-400 bg-white'
+            }">
+              ${isSelected ? '<span class="w-1.5 h-1.5 rounded-full bg-white"></span>' : ''}
+            </div>
+            <div class="text-xs">
+              <span class="font-bold mr-1.5 text-slate-900">${opt.key}.</span>
+              <span class="${isSelected ? 'font-semibold text-brand-950' : 'text-slate-800'}">${opt.text}</span>
+            </div>
+          </div>
+          ${isSelected ? '<span class="text-[11px] font-bold text-emerald-700 font-mono tracking-wider">✓ RECORDED</span>' : ''}
+        `;
+        container.appendChild(optRow);
+      });
+
+      // Previous / Next button boundary states
+      const prevBtn = document.getElementById('btn-prev');
+      const nextBtn = document.getElementById('btn-next');
+
+      prevBtn.disabled = (index === 0);
+      if (index === 0) {
+        prevBtn.classList.add('opacity-40', 'cursor-not-allowed');
+      } else {
+        prevBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+      }
+
+      if (index === EXAM_QUESTIONS.length - 1) {
+        nextBtn.innerHTML = '<span>Save & Review</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>';
+      } else {
+        nextBtn.innerHTML = '<span>Save & Next</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>';
+      }
+
+      renderNavigatorGrid();
+      saveStateToLocalStorage();
+    }
+
+    function selectOption(qIndex, key) {
+      appState.answers[qIndex] = key;
+      renderQuestion(qIndex);
+      updateCounts();
+    }
+
+    function clearCurrentResponse() {
+      if (appState.answers.hasOwnProperty(appState.currentQuestionIndex)) {
+        delete appState.answers[appState.currentQuestionIndex];
+        renderQuestion(appState.currentQuestionIndex);
+        updateCounts();
+      }
+    }
+
+    function toggleCurrentFlag() {
+      const idx = appState.currentQuestionIndex;
+      appState.flags[idx] = !appState.flags[idx];
+      renderQuestion(idx);
+      updateCounts();
+    }
+
+    function goToPreviousQuestion() {
+      if (appState.currentQuestionIndex > 0) {
+        renderQuestion(appState.currentQuestionIndex - 1);
+      }
+    }
+
+    function saveAndNextQuestion() {
+      if (appState.currentQuestionIndex < EXAM_QUESTIONS.length - 1) {
+        renderQuestion(appState.currentQuestionIndex + 1);
+      } else {
+        // Last question proceeds to review
+        navigateTo('review');
+      }
+    }
+
+    // NAVIGATOR GRID GENERATOR
+    function renderNavigatorGrid() {
+      const grid = document.getElementById('navigator-grid');
+      grid.innerHTML = '';
+
+      EXAM_QUESTIONS.forEach((q, idx) => {
+        const numStr = (idx + 1).toString().padStart(2, '0');
+        const isCurrent = (idx === appState.currentQuestionIndex);
+        const isAnswered = appState.answers.hasOwnProperty(idx);
+        const isFlagged = appState.flags[idx] === true;
+
+        let styleClasses = '';
+
+        if (isCurrent) {
+          // Current takes priority boundary
+          if (isAnswered) {
+            styleClasses = 'bg-emerald-600 text-white ring-2 ring-brand-900 ring-offset-1 font-bold';
+          } else {
+            styleClasses = 'bg-white text-brand-950 border-2 border-brand-900 font-bold';
+          }
+        } else if (isAnswered) {
+          styleClasses = 'bg-emerald-600 hover:bg-emerald-700 text-white font-medium border border-emerald-700';
+        } else if (isFlagged) {
+          styleClasses = 'bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-400 font-medium';
+        } else {
+          styleClasses = 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-300';
+        }
+
+        const btn = document.createElement('button');
+        btn.className = `h-9 rounded text-xs font-mono transition flex items-center justify-center relative ${styleClasses}`;
+        btn.onclick = () => renderQuestion(idx);
+
+        // Flag corner triangle if flagged
+        let cornerHtml = '';
+        if (isFlagged) {
+          cornerHtml = '<span class="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-amber-400"></span>';
+        }
+
+        btn.innerHTML = `${cornerHtml}<span>${numStr}</span>`;
+        grid.appendChild(btn);
+      });
+    }
+
+    function updateCounts() {
+      const answeredCount = Object.keys(appState.answers).length;
+      const flaggedCount = Object.keys(appState.flags).filter(k => appState.flags[k]).length;
+      const unansweredCount = EXAM_QUESTIONS.length - answeredCount;
+
+      // Update right navigator counters
+      document.getElementById('nav-count-answered').textContent = answeredCount;
+      document.getElementById('nav-count-unanswered').textContent = unansweredCount;
+      document.getElementById('nav-count-flagged').textContent = flaggedCount;
+    }
+
+    // TIMER SYSTEM
+    function startTimer() {
+      if (appState.timerInterval) return;
+
+      appState.timerInterval = setInterval(() => {
+        if (appState.timeRemainingSeconds > 0) {
+          appState.timeRemainingSeconds--;
+          updateTimerDisplay();
+
+          // 5-minute threshold warning check
+          if (appState.timeRemainingSeconds === 5 * 60) {
+            simulateTimerWarning();
+          }
+        } else {
+          // Timer expired -> Auto Submit
+          clearInterval(appState.timerInterval);
+          appState.timerInterval = null;
+          triggerAutoSubmissionOnExpiry();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(appState.timeRemainingSeconds / 60);
+      const seconds = appState.timeRemainingSeconds % 60;
+      const formatted = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      const el = document.getElementById('header-timer');
+      if (el) {
+        el.textContent = formatted;
+
+        // Visual alerts on critical timer states
+        if (appState.timeRemainingSeconds <= 60) { // Critical < 1 min
+          el.className = 'font-bold text-sm text-red-400 animate-pulse';
+        } else if (appState.timeRemainingSeconds <= 300) { // Warning < 5 min
+          el.className = 'font-bold text-sm text-amber-300';
+        } else {
+          el.className = 'font-bold text-sm text-white';
+        }
+      }
+    }
+
+    function triggerAutoSubmissionOnExpiry() {
+      toggleModal('modal-time-expired', true);
+      setTimeout(() => {
+        toggleModal('modal-time-expired', false);
+        navigateTo('submitting');
+        setTimeout(() => {
+          navigateTo('submitted');
+          renderSubmissionReceipt();
+        }, 1200);
+      }, 1800);
+    }
+
+    // AUDIT & REVIEW SCREEN RENDERER
+    function renderReviewAuditScreen() {
+      const answeredCount = Object.keys(appState.answers).length;
+      const unansweredCount = EXAM_QUESTIONS.length - answeredCount;
+      const flaggedIndices = Object.keys(appState.flags).filter(k => appState.flags[k]).map(Number);
+
+      document.getElementById('review-stat-answered').textContent = answeredCount;
+      document.getElementById('review-stat-unanswered').textContent = unansweredCount;
+      document.getElementById('review-stat-flagged').textContent = flaggedIndices.length;
+
+      document.getElementById('unanswered-count-badge').textContent = unansweredCount;
+      document.getElementById('flagged-count-badge').textContent = flaggedIndices.length;
+
+      // Populate Unanswered List
+      const unansContainer = document.getElementById('unanswered-list-container');
+      unansContainer.innerHTML = '';
+
+      let hasUnanswered = false;
+      EXAM_QUESTIONS.forEach((q, idx) => {
+        if (!appState.answers.hasOwnProperty(idx)) {
+          hasUnanswered = true;
+          const row = document.createElement('div');
+          row.className = 'p-3 flex items-center justify-between bg-white hover:bg-slate-50 transition';
+          row.innerHTML = `
+            <div>
+              <span class="font-bold text-slate-800">Question ${(idx + 1).toString().padStart(2, '0')}:</span>
+              <span class="text-slate-600 ml-2">${q.text.substring(0, 65)}...</span>
+              <span class="ml-2 px-1.5 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-semibold rounded">Unanswered</span>
+            </div>
+            <button onclick="jumpFromReviewToTest(${idx})" class="px-3 py-1 bg-brand-900 hover:bg-brand-800 text-white rounded text-xs font-semibold uppercase tracking-wider transition">
+              Review Question
+            </button>
+          `;
+          unansContainer.appendChild(row);
+        }
+      });
+
+      if (!hasUnanswered) {
+        unansContainer.innerHTML = '<div class="p-4 text-center text-emerald-700 bg-emerald-50 font-medium">All questions have been answered.</div>';
+      }
+
+      // Populate Flagged List
+      const flagContainer = document.getElementById('flagged-list-container');
+      flagContainer.innerHTML = '';
+
+      if (flagIndices(flaggedIndices).length === 0) {
+        flagContainer.innerHTML = '<div class="p-4 text-center text-slate-500 bg-slate-50">No questions currently flagged for review.</div>';
+      } else {
+        flaggedIndices.forEach(idx => {
+          const q = EXAM_QUESTIONS[idx];
+          const isAnswered = appState.answers.hasOwnProperty(idx);
+          const row = document.createElement('div');
+          row.className = 'p-3 flex items-center justify-between bg-white hover:bg-slate-50 transition';
+          row.innerHTML = `
+            <div>
+              <span class="font-bold text-slate-800">Question ${(idx + 1).toString().padStart(2, '0')}:</span>
+              <span class="text-slate-600 ml-2">${q.text.substring(0, 65)}...</span>
+              <span class="ml-2 px-1.5 py-0.5 ${isAnswered ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'} text-[10px] font-semibold rounded">
+                ${isAnswered ? 'Answered' : 'Unanswered'}
+              </span>
+              <span class="ml-1 px-1.5 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-semibold rounded">Flagged</span>
+            </div>
+            <button onclick="jumpFromReviewToTest(${idx})" class="px-3 py-1 bg-brand-900 hover:bg-brand-800 text-white rounded text-xs font-semibold uppercase tracking-wider transition">
+              Review Question
+            </button>
+          `;
+          flagContainer.appendChild(row);
+        });
+      }
+    }
+
+    function flagIndices(indices) {
+      return indices.filter(i => appState.flags[i]);
+    }
+
+    function jumpFromReviewToTest(targetIdx) {
+      navigateTo('test');
+      renderQuestion(targetIdx);
+    }
+
+    // SUBMISSION FLOW MODAL CONTROLLER
+    function openSubmitConfirmationModal() {
+      const answeredCount = Object.keys(appState.answers).length;
+      const unansweredCount = EXAM_QUESTIONS.length - answeredCount;
+      const flaggedCount = Object.keys(appState.flags).filter(k => appState.flags[k]).length;
+
+      const msgEl = document.getElementById('submit-confirm-message');
+      if (unansweredCount > 0) {
+        msgEl.innerHTML = `You have <strong>${unansweredCount} unanswered questions</strong> and <strong>${flaggedCount} questions flagged for review</strong>.<br><span class="text-slate-500 mt-1 block">Are you certain you wish to submit now?</span>`;
+      } else {
+        msgEl.innerHTML = `You have <strong>answered all 20 questions</strong> (${flaggedCount} flagged for review).<br><span class="text-slate-500 mt-1 block">Are you ready to commit your final examination dispatch?</span>`;
+      }
+
+      toggleModal('modal-submit-confirmation', true);
+    }
+
+    function confirmFinalSubmit() {
+      toggleModal('modal-submit-confirmation', false);
+      if (appState.timerInterval) {
+        clearInterval(appState.timerInterval);
+        appState.timerInterval = null;
+      }
+      navigateTo('submitting');
+      setTimeout(() => {
+        navigateTo('submitted');
+        renderSubmissionReceipt();
+      }, 1400);
+    }
+
+    function renderSubmissionReceipt() {
+      const answeredCount = Object.keys(appState.answers).length;
+      document.getElementById('final-submitted-count').textContent = `${answeredCount} / ${EXAM_QUESTIONS.length} Questions Recorded`;
+      const now = new Date();
+      document.getElementById('final-submitted-time').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' IST';
+    }
+
+    function resetAndReturnHome() {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch(e) {}
+      // Reset State
+      appState.answers = {};
+      appState.flags = {};
+      appState.timeRemainingSeconds = 30 * 60;
+      appState.tabSwitchCount = 0;
+      navigateTo('landing');
+    }
+
+    // PROCTORING SIMULATION HELPERS (FOR EVALUATOR DEMO)
+    function triggerTabSwitchWarning() {
+      appState.tabSwitchCount++;
+      document.getElementById('tab-warning-count').textContent = appState.tabSwitchCount.toString().padStart(2, '0');
+      document.getElementById('popover-violations-count').textContent = appState.tabSwitchCount.toString().padStart(2, '0');
+      toggleModal('modal-tab-warning', true);
+    }
+
+    function dismissTabWarning() {
+      toggleModal('modal-tab-warning', false);
+    }
+
+    function triggerFullscreenExitWarning() {
+      toggleModal('modal-fullscreen-warning', true);
+    }
+
+    function reEnterFullscreen() {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+      toggleModal('modal-fullscreen-warning', false);
+    }
+
+    function simulateTimerWarning() {
+      const banner = document.getElementById('exam-time-banner');
+      banner.classList.remove('hidden');
+    }
+
+    function toggleProctoringPopover() {
+      const popover = document.getElementById('proctoring-popover');
+      popover.classList.toggle('hidden');
+    }
+
+    function toggleModal(modalId, show) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        if (show) modal.classList.remove('hidden');
+        else modal.classList.add('hidden');
+      }
+    }
+
+    // BROWSER EVENT LISTENERS (Actual Page Visibility & Fullscreen detection)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden' && appState.currentRoute === 'test') {
+        triggerTabSwitchWarning();
+      }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement && appState.currentRoute === 'test') {
+        triggerFullscreenExitWarning();
+      }
+    });
+
+    // INITIALIZATION ON LOAD
+    window.addEventListener('DOMContentLoaded', () => {
+      loadStateFromLocalStorage();
+      updateCounts();
+      updateTimerDisplay();
+    });
+  </script>
+
+</body>
+</html>
